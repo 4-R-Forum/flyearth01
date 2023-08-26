@@ -1,6 +1,7 @@
 let updown = 0
 let pitch = 0
 let roll = 0
+let cmdString = ""
 loops.everyInterval(500, function () {
     updown = 0
     if (input.buttonIsPressed(Button.A)) {
@@ -12,5 +13,6 @@ loops.everyInterval(500, function () {
     }
     pitch = input.rotation(Rotation.Pitch)
     roll = input.rotation(Rotation.Roll)
-    basic.showString("" + convertToText(updown) + "," + convertToText(pitch) + "," + convertToText(roll))
+    cmdString = "" + convertToText(updown) + "," + convertToText(pitch) + "," + convertToText(roll)
+    serial.writeLine(cmdString)
 })
