@@ -12,5 +12,5 @@ loops.everyInterval(500, function () {
     }
     pitch = input.rotation(Rotation.Pitch)
     roll = input.rotation(Rotation.Roll)
-    basic.showString("" + convertToText(updown) + "\",\"" + convertToText(pitch) + "\",\"" + convertToText(roll))
+    basic.showString("" + convertToText(updown) + "," + convertToText(pitch) + "," + convertToText(roll))
 })
