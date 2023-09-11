@@ -7,12 +7,19 @@ $driver.Navigate().GoToURL("https://earth.google.com/") | Out-Null
 $driver.Manage().Timeouts().ImplicitWait = [System.TimeSpan]::FromSeconds(4)
 Read-Host "Navigate in Earth to starting point, press Enter to Fly"
 $action = New-Object OpenQA.Selenium.Interactions.Actions($driver)
-$s = 3 # speed
+#$s = 3 # speed
 function press($mod,$key){
+  # now called separately for updown, pitch, roll, 3 times
+  # so Left Go Left Go Left Go
+  # rather than Left Left Left Go Go Go
   if ($null -ne $mod) {$action.KeyDown($mod)| Out-Null}
-  for ($j = 0; $j -lt $s ; $j++){
+ if ($null -ne $key) {
     $action.KeyDown($key)| Out-Null
     $action.KeyUp($key)| Out-Null
+  }
+  else {
+    $action.KeyDown($Keys::ArrowUp)| Out-Null
+    $action.KeyUp($Keys::ArrowUp)| Out-Null   
   }
   if ($null -ne $mod) {$action.KeyUp($mod)| Out-Null} 
   $action.Perform() | Out-Null
@@ -45,16 +52,19 @@ while ($true){
     $updown =[int] $cmds[0]
     $pitch =  [int] $cmds[1]
     $roll = [int] $cmds[2]
-    if     ( $updown -eq  1) {press        $null $Keys::PageUp}
-    elseif ( $updown -eq  -1) {press       $null $Keys::PageDown}
-    if     ($roll -gt  20)   {press $Keys::Shift $Keys::ArrowLeft;  $m ="Turn Right"} 
-    elseif ($roll -lt  -20)  {press $Keys::Shift $Keys::ArrowRight; $m = "Turn Left" } 
-    if     ($pitch -gt  20)  {press $Keys::Shift $Keys::ArrowDown ; $m = "Look Up" } 
-    elseif ($pitch -lt  -20) {press $Keys::Shift $Keys::ArrowUp;    $m = "Look Down" } 
+    if     ( $updown -eq  1) {press        $null $Keys::PageUp;    $m ="GoUp"}
+    elseif ( $updown -eq  -1) {press       $null $Keys::PageDown;  $m ="GoDown"}
+    else {press $Null $Null ; press $Null $Null ; press $Null $Null}
+    if     ($roll -gt  20)   {press $Keys::Shift $Keys::ArrowLeft;  $m ="TurnRight"} 
+    elseif ($roll -lt  -20)  {press $Keys::Shift $Keys::ArrowRight; $m = "TurnLeft" }
+    else {press $Null $Null ; press $Null $Null ; press $Null $Null}
+    if     ($pitch -gt  20)  {press $Keys::Shift $Keys::ArrowDown ; $m = "LookUp" } 
+    elseif ($pitch -lt  -20) {press $Keys::Shift $Keys::ArrowUp;    $m = "LookDown" } 
+    else {press $Null $Null ; press $Null $Null ; press $Null $Null}
   }
-  for ($j = 0; $j -lt $s ; $j++){
-    press $null $Keys::ArrowUp
-  }
+  #for ($j = 0; $j -lt $s ; $j++){
+  #  press $null $Keys::ArrowUp
+  #}
   # logging
   $i += 1
   $n = get-date
