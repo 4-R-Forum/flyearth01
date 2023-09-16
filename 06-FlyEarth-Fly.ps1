@@ -17,7 +17,7 @@ catch {
 $i = 0
 $l = get-date
 $m =""
-$s = 1 # speed
+$s = 3 # speed
 while ($true){
   try { 
     # get command
@@ -65,7 +65,7 @@ while ($true){
     $m = "LookUp2"
   } 
   # ditto elseif -lt 20
-  if ($pitch -lt -20) { # look down
+  elseif ($pitch -lt -20) { # look down
     $action.KeyDown($Keys::Shift) | Out-Null
     $action.KeyDown($Keys::ArrowUp) | Out-Null
     $action.KeyUp($Keys::ArrowUp) | Out-Null
@@ -82,24 +82,24 @@ while ($true){
     $action.KeyDown($Keys::Shift) | Out-Null
     $action.KeyDown($Keys::ArrowLeft) | Out-Null
     $action.KeyUp($Keys::ArrowLeft) | Out-Null
-    $m = "TurnRight"
+    $m = "TurnLeft"
     if ($roll -gt 55) {
       $action.KeyDown($Keys::ArrowLeft) | Out-Null
       $action.KeyUp($Keys::ArrowLeft) | Out-Null
-      $m = "TurnRight2"
+      $m = "TurnLeft2"
     }
     $action.KeyUp($Keys::Shift) | Out-Null
   }
   # ditto elseif -lt 20
-  if ($roll -lt -20) {
+  elseif ($roll -lt -20) {
     $action.KeyDown($Keys::Shift) | Out-Null
     $action.KeyDown($Keys::ArrowRight) | Out-Null
     $action.KeyUp($Keys::ArrowRight) | Out-Null
-    $m = "TurnLeft"
+    $m = "TurnRight"
     if ($roll -lt -55) {
       $action.KeyDown($Keys::ArrowRight) | Out-Null
       $action.KeyUp($Keys::ArrowRight) | Out-Null
-      $m = "TurnLeft2"
+      $m = "TurnRight2"
     }
     $action.KeyUp($Keys::Shift) | Out-Null
   }
