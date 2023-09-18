@@ -20,7 +20,9 @@ $m =""
 $s = 3 # speed
 while ($true){
   try { 
-    # get command
+    # get command 3 times to catch up
+    $cmd_string = $port.ReadLine()
+    $cmd_string = $port.ReadLine()
     $cmd_string = $port.ReadLine()
   }
   catch { break }
@@ -82,11 +84,20 @@ while ($true){
     $action.KeyDown($Keys::Shift) | Out-Null
     $action.KeyDown($Keys::ArrowLeft) | Out-Null
     $action.KeyUp($Keys::ArrowLeft) | Out-Null
-    $m = "TurnLeft"
-    if ($roll -gt 55) {
+    $m = "TurnRight"
+    if ($roll -gt 40) {
       $action.KeyDown($Keys::ArrowLeft) | Out-Null
       $action.KeyUp($Keys::ArrowLeft) | Out-Null
-      $m = "TurnLeft2"
+      $action.KeyDown($Keys::ArrowLeft) | Out-Null
+      $action.KeyUp($Keys::ArrowLeft) | Out-Null
+      $m = "TurnRight2"
+      if ($roll -gt 60) {
+        $action.KeyDown($Keys::ArrowLeft) | Out-Null
+        $action.KeyUp($Keys::ArrowLeft) | Out-Null
+        $action.KeyDown($Keys::ArrowLeft) | Out-Null
+        $action.KeyUp($Keys::ArrowLeft) | Out-Null
+        $m = "TurnRight3"
+      }
     }
     $action.KeyUp($Keys::Shift) | Out-Null
   }
@@ -95,11 +106,19 @@ while ($true){
     $action.KeyDown($Keys::Shift) | Out-Null
     $action.KeyDown($Keys::ArrowRight) | Out-Null
     $action.KeyUp($Keys::ArrowRight) | Out-Null
-    $m = "TurnRight"
-    if ($roll -lt -55) {
+    $m = "TurnLeft"
+    if ($roll -lt -40) {
       $action.KeyDown($Keys::ArrowRight) | Out-Null
       $action.KeyUp($Keys::ArrowRight) | Out-Null
-      $m = "TurnRight2"
+      $action.KeyDown($Keys::ArrowRight) | Out-Null
+      $action.KeyUp($Keys::ArrowRight) | Out-Null
+      $m = "TurnLeft2"
+      if ($roll -lt -60) {
+        $action.KeyDown($Keys::ArrowRight) | Out-Null
+        $action.KeyUp($Keys::ArrowRight) | Out-Null
+        $action.KeyDown($Keys::ArrowRight) | Out-Null
+        $m = "TurnLeft3"
+      }
     }
     $action.KeyUp($Keys::Shift) | Out-Null
   }
