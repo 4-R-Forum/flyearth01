@@ -2,7 +2,7 @@ let updown = 0
 let pitch = 0
 let roll = 0
 let cmdString = ""
-loops.everyInterval(500, function () {
+loops.everyInterval(2000, function () {
     updown = 0
     if (input.buttonIsPressed(Button.A)) {
         updown = 1
