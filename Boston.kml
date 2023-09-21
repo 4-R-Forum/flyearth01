@@ -62,10 +62,10 @@
 		<gx:mid>/m/01cx_</gx:mid>
 		<gx:fid>0x89e3652d0d3d311b:0x787cbf240162e8a0</gx:fid>
 		<LookAt>
-			<longitude>-70.97</longitude>
-			<latitude>42.32</latitude>
+			<longitude>-71.03</longitude>
+			<latitude>42.39</latitude>
 			<altitude>200</altitude>
-			<heading>315</heading>
+			<heading>220</heading>
 			<tilt>75</tilt>
 			<gx:fovy>35</gx:fovy>
 			<range>68761.1801354122</range>

@@ -1,6 +1,7 @@
 Clear-Host
 Add-Type -Path "C:\Portable\Selenium\WebDriver.dll"
 $driver = New-Object OpenQA.Selenium.Chrome.ChromeDriver
+$By = [OpenQA.Selenium.By]
 $Keys = [OpenQA.Selenium.Keys]
   $sh = $Keys::Shift
   $au = $Keys::ArrowUp
@@ -48,8 +49,8 @@ if ($button -ne 0 ){ # look up /down
   # ignore pitch/roll this loop
   # look up  = shift arrow down
   kd $sh
-  if ( $button -eq 1) { $k = $ad ; $m = "LookUp"}
-  else { $k = $au ; $m = "LookDown"}
+  if ( $button -eq 1) { $k = $ad ; $m += "LookUp"}
+  else { $k = $au ; $m += "LookDown"}
   kd $k
   $action.Perform()
 }
@@ -58,30 +59,40 @@ elseif ( ($pitch -lt 20) `
   -and   ($roll -lt 20) `
   -and   ($roll -gt -20) ){
     # level, continuous fly forward
-    ku $sh
+    ku $sh # no shift
+    ku $pd # stop going up
+    ku $pu # stop going down
     kd $au
     $action.Perform()
     $m = "Level"
   } 
 else  {
-  # need to change direction, altitude
-  # shift down needed, does not affect PgUp/Dn
-	kd $sh
-  # pitch, go down  = PageDn
-	if ($pitch -gt 0) { kd $pd ; $m ="GoUp"}
-	if (pitch -lt 0) {
-		$altitude = getItemById(camera-altitude)
-		if ($altitude -le 100 ){ kd $pu ; $m ="GoDown"}
-  }
-  # roll, go left = Right arrow
-	if ($roll -gt 0) { kd $al ; $m ="GoRight"}
-	if (pitch -lt 0) { kd $ar ; $m ="GoLeft"}
-  # keep flying
-	ku $sh
-	kd $au
-	$action.Perform()
-}
 
+  # need to change direction, altitude, do one or the other this loop
+  # direction first, repeat turn, no forward
+  ku $pd # stop going up
+  ku $pu # stop going down
+  if (($roll -gt 20) `
+  -or   ($roll -lt -20) ){
+    kd $sh # must shift
+    # roll, go left = Right arrow
+    if ($roll -gt 0) { kd $al ; $m ="GoRight"}
+    if ($roll -lt 0) { kd $ar ; $m ="GoLeft"}
+    $action.Perform()
+  }
+  else {
+    # no roll
+    # pitch, go down  = PageUp
+    if ($pitch -gt 0) { kd $pd ; $m ="GoUp"}
+    if ($pitch -lt 0) {
+      #$altitude = $driver.FindElement($By::Id("camera-altitude"))
+      #if ($altitude -le 100 ){ kd $pu ; $m ="GoDown"}
+      kd $pu ; $m ="GoDown"
+      kd $au
+	    $action.Perform()
+    }
+  } 
+}
 
   # logging
   $i += 1
