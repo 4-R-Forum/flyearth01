@@ -2,13 +2,14 @@ Clear-Host
 Add-Type -Path "C:\Portable\Selenium\WebDriver.dll"
 $driver = New-Object OpenQA.Selenium.Chrome.ChromeDriver
 $By = [OpenQA.Selenium.By]
-$Keys = [OpenQA.Selenium.Keys]
-  $sh = $Keys::Shift
-  $au = $Keys::ArrowUp
-  $al = $Keys::ArrowLeft
-  $ar = $Keys::ArrowRight
-  $pu = $Keys::PageUp
-  $pd = $Keys::PageDown
+$Keys  = [OpenQA.Selenium.Keys]
+  $sh  = $Keys::Shift
+  $alt = $Keys::Alt
+  $au =  $Keys::ArrowUp
+  $al =  $Keys::ArrowLeft
+  $ar =  $Keys::ArrowRight
+  $pu =  $Keys::PageUp
+  $pd =  $Keys::PageDown
 $driver.Navigate().GoToURL("https://earth.google.com/") | Out-Null
 Read-Host "Navigate in Earth to starting point, press Enter to Fly"
 $action = New-Object OpenQA.Selenium.Interactions.Actions($driver)
@@ -59,10 +60,11 @@ elseif ( ($pitch -lt 20) `
   -and   ($roll -lt 20) `
   -and   ($roll -gt -20) ){
     # level, continuous fly forward
+    # ///TODO Sep-21-1 this is a bit too fast
     ku $sh # no shift
     ku $pd # stop going up
     ku $pu # stop going down
-    kd $au
+    kd $au # press and hold arrow up to keep going forward
     $action.Perform()
     $m = "Level"
   } 
@@ -73,18 +75,26 @@ else  {
   ku $pd # stop going up
   ku $pu # stop going down
   if (($roll -gt 20) `
-  -or   ($roll -lt -20) ){
-    kd $sh # must shift
+  -or   ($roll -lt -20) ){ # if roll right or left
     # roll, go left = Right arrow
-    if ($roll -gt 0) { kd $al ; $m ="GoRight"}
-    if ($roll -lt 0) { kd $ar ; $m ="GoLeft"}
+    kd $sh # must shift
+    # act on roll before pitch
+    # works ok, but better if fwd too ///TODO Sep-21-2 how to repeat sh L/R, no shift up until next loop
+    $rk = $null
+    if ($roll -gt 0) { $rk = $al ; $m ="GoRight"}
+    if ($roll -lt 0) { $rk = $ar ; $m ="GoLeft"}
+    kd $rk
+    ku $sh
+    kd $au
     $action.Perform()
   }
   else {
     # no roll
     # pitch, go down  = PageUp
+    # works ok
     if ($pitch -gt 0) { kd $pd ; $m ="GoUp"}
     if ($pitch -lt 0) {
+      # /// TODO Sep-21-3 how to find camera-altituede element?
       #$altitude = $driver.FindElement($By::Id("camera-altitude"))
       #if ($altitude -le 100 ){ kd $pu ; $m ="GoDown"}
       kd $pu ; $m ="GoDown"
