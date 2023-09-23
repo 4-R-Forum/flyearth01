@@ -34,6 +34,7 @@ while ($true){
   try { 
     # get command 
     $cmd_string = $port.ReadLine()
+    $cmd_string = $port.ReadLine()
   }
   catch { break }
 
